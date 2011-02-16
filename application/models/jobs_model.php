@@ -70,11 +70,11 @@ class Jobs_model extends CI_Model {
      * @param int $id
      * @return string
      */
-    function get_details($id)
+    function get_details($slug)
     {
         $data = array();
 
-        $options = array('id' => $id);
+        $options = array('slug' => $slug);
         $query = $this->db->get_where('jobs', $options, 1);
 
         if ($query->num_rows() > 0) {
@@ -112,6 +112,7 @@ class Jobs_model extends CI_Model {
         } else {
             $data = array(
                 'title'     =>  $this->input->post('title'),
+                'slug'      =>  $this->create_unique_slug($this->input->post('title'), 'jobs'),
                 'category'  =>  $this->input->post('category'),
                 'body'      =>  $this->input->post('body'),
                 'type'      =>  $this->input->post('type'),
@@ -129,6 +130,36 @@ class Jobs_model extends CI_Model {
             // And back to job listings page.
             redirect('jobs/listings');
         }
+    }
+    
+    /*
+     * Create Unigue Slug
+     * 
+     * Creates a unigue slug name for each job title
+     * 
+     * @param string $string
+     * @param string $table
+     */
+    public function create_unique_slug($string, $table)
+    {
+        $slug = url_title($string);
+        $slug = strtolower($slug);
+        $i = 0;
+        $params = array ();
+        $params['slug'] = $slug;
+        if ($this->input->post('id')) {
+            $params['id !='] = $this->input->post('id');
+        }
+
+        while ($this->db->where($params)->get($table)->num_rows()) {
+            if (!preg_match ('/-{1}[0-9]+$/', $slug )) {
+                $slug .= '-' . ++$i;
+            } else {
+                $slug = preg_replace ('/[0-9]+$/', ++$i, $slug );
+            }
+            $params ['slug'] = $slug;
+            }
+        return $slug;
     }
 
 }

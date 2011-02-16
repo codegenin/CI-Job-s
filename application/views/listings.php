@@ -39,7 +39,7 @@
     ?>
 
     <li<?php if ($counter == 2) { echo ' class="alt"'; $counter = 0; } ?>>
-        <?php $segments = array('jobs', 'details', $row['id']); ?>
+        <?php $segments = array('jobs', 'details', $row['slug']); ?>
         <a href="<?php echo site_url($segments); ?>">
            <span class="title"><?php echo $row['title']; ?></span>
          - <strong><?php echo $row['type']; ?> </strong>
