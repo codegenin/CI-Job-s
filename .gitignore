@@ -9,6 +9,6 @@ Thumbs.db
 # Logs and databases #
 ######################
 *nbproject
-*application/logs
-*application/cache
+application/logs/*
+application/cache/*
 *application/config/database.php
